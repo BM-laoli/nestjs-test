@@ -1,0 +1,22 @@
+{
+  "name": "ngm-seller-bigfn",
+  "version": "1.0.0",
+  "description": "## 本身",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "usingWorkspances": true,
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/*",
+      "**/**"
+    ]
+  },
+  "author": "",
+  "license": "ISC"
+}

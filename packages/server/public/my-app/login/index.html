@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+</head>
+<body>
+  
+</body>
+<script>
+  const getCookie = () => {
+    return document.cookie?.split(';')?.
+    find( item => item?.includes('NVTC') )?.split(';')?.
+    find(item => item?.includes('NVTC') )?.split('=')[1]
+  }
+  console.log(getCookie());
+  const getCookieMethod =  setInterval(()=>{
+    const cookie = getCookie();
+    window.ReactNativeWebView && 
+        window.ReactNativeWebView.postMessage(JSON.stringify({
+        EventID:'sendCookie',
+        cookie:cookie,
+      }));
+
+      if ( cookie  ) {
+          clearInterval(getCookieMethod)
+          return
+      }
+
+    },200)
+  
+</script>
+</html>

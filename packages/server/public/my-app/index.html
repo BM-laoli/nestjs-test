@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+      <title>SellerAppLogin</title>
+    <!-- 载入必要的两个库 -->
+      <script src="./i18next.js" ></script>
+      <script src="./flexible.js"></script>
+      <script src="./lottie.min.js"></script>
+
+    </head>
+    <!-- 载入简单的样式 -->
+    <style>
+        body {
+          margin: unset;
+        }
+        .loading {
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .loading-animation {
+          width: 100px;
+          height: 100px;
+          background-color: #fff;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .error-wrap {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          overflow: hidden;
+        }
+        .waring-icon {
+          height: 60px;
+          width: 53px;
+          background: url('./exclamation-triangle-solid.svg') no-repeat;
+          background-position: center center;
+          background-size: 100%;
+        }
+        .title {
+          margin-top: 15px;
+          font-size: 20px;
+          line-height: 24px;
+          font-weight: 600px;
+        }
+        .sub-title {
+          margin-top: -8px;
+          width: 310px;
+          font-size: 15px;
+          font-weight: 400;
+          line-height: 20px;
+          text-align: center;
+          color: #6E6E6E;
+        }
+        .btn {
+          width: 180px;
+          height: 40px;
+          background: linear-gradient(90deg, #E05E00 0%, #F06C00 100%);
+          border-radius: 20px;
+          text-align: center;
+          color: #fff;
+          font-size: 17px;
+          font-weight: 600;
+          line-height: 40px;
+        }
+      .img-log {
+        width: 55px;
+        height: 25px;
+        position: absolute;
+      }
+      </style>
+    </head>
+    <body>
+      <div class="loading">
+        <div 
+         id="loading-animation" 
+         class="loading-animation bodymovin"  
+         data-bm-path="data.json" 
+         data-bm-renderer="svg">
+          <img src="" class="img-log" id="imgValue">
+        </div>
+        <div class="error-wrap" id="error-wrap-content">
+            <div class="waring-icon">
+            </div>
+            <h2 id="title" class="title">好像出错了</h2>
+            <p  id="sub-title" class="sub-title">由于网络问题无法获取登录页，请检查网络后重新尝试</p>
+            <div  id="btn-reload" class="btn" >
+              <span id="reload">刷新</span>
+            </div>
+        </div>
+
+      </div>
+      <script>
+          // {
+          //   lng:'en',
+          //   resources:'ccc'
+          // }
+        const i18nInit =async (currentLang)=>{
+          await  i18next.init({
+                      lng: currentLang.lng || 'en', // if you're using a language detector, do not define the lng option
+                      debug: false,
+                      resources: currentLang.resources
+                    });
+                console.log(i18next.t('title'))
+            document.getElementById('title').innerHTML = i18next.t('g-loginPageErrReload');
+            document.getElementById('sub-title').innerHTML = i18next.t('g-loginPageErrSubTitle');
+            document.getElementById('reload').innerHTML = i18next.t('g-loginPageErrReload');
+        }
+
+        const btnReload = document.querySelector('#btn-reload')
+        const loadingWrap =  document.querySelector('#loading-animation')
+        const imgValue =  document.querySelector('#imgValue')
+        const  errorWrap = document.querySelector('#error-wrap-content')
+        
+        const  hideLoading =()=>{
+          loadingWrap.style.height = 0 
+          loadingWrap.style.width = 0 
+          imgValue.style.height = 0 
+          imgValue.style.width = 0 
+        }
+
+        const showLoading =()=>{
+          loadingWrap.style.height = '100px' 
+          loadingWrap.style.width = '100px'
+          imgValue.style.width = '55px' 
+          imgValue.style.height = '25px'
+        }
+
+        const hiedError =()=>{
+          errorWrap.style.height = 0 
+          errorWrap.style.width = 0 
+        }
+
+        const showError =()=>{
+          errorWrap.style.height = 'unset' 
+          errorWrap.style.width = 'unset'
+        }
+
+        
+        hiedError()
+        hideLoading()
+        // 获取图片
+        const getImg = () => {
+          fetch('/external/mkpl/n/ngm-seller-app/v1/login/logo.png').then( async (res)=>{
+            const img = await res.json();
+            imgValue.src =  img.base64;
+            getServer()
+          }).catch((err)=>{ 
+            console.log(err);
+           })
+        }
+        // 解决图和loading动效不同步的问题
+        const  load =  setInterval(() => {
+          if(loadingWrap.childNodes.length === 4 && window.currentLang ) {
+            i18nInit(window.currentLang)
+            getImg()
+            clearInterval(load)
+          }
+        }, 100);
+
+        const getServer = () => {
+          const searchKey = location.search;
+          hiedError()
+          fetch('/external/mkpl/n/ngm-seller-app/v1/login/getToken'+searchKey).then( async (res)=>{
+            const loginMessage = await res.json();
+              console.log(loginMessage);
+              if(!loginMessage.token){
+                hideLoading()
+                showError()
+                return
+              }
+              window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(loginMessage))
+          }).catch((err)=>{ 
+            hideLoading()
+            showError()
+            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(
+                  {
+                    EventID: "pasTokenError",
+                    data: {},
+                  }
+              ))
+           })
+        }
+        btnReload.addEventListener('click', ()=>{
+          showLoading()
+          getServer()
+        })
+      </script>
+    </body>
+    </html>
