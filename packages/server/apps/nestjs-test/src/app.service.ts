@@ -1,4 +1,4 @@
-import { MyLibraryService } from '@app/my-library';
+import { MyLibraryService } from '@lib/my-library/src';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

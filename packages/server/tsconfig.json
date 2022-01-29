@@ -18,18 +18,8 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/my-library": [
-        "libs/my-library/src"
-      ],
-      "@app/my-library/*": [
-        "libs/my-library/src/*"
-      ],
-      "@app/config-lib": [
-        "libs/config-lib/src"
-      ],
-      "@app/config-lib/*": [
-        "libs/config-lib/src/*"
-      ]
+      "@/*" : ["./*"],
+      "@lib/*": ["./libs/*"]
     },
   }
 }

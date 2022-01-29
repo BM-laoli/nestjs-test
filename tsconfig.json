@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "downlevelIteration": true,

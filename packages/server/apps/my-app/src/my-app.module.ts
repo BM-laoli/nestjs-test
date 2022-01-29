@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MyLibraryModule } from '@app/my-library';
+import { MyLibraryModule } from "@lib/my-library/src";
 import { ConfigModule } from '@nestjs/config';
 import config from '../../../config';
 import { TestModule } from './modules/TestMules/test-modules.module';

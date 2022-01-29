@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { TestModulesService } from './service/testMules.service';
-import { TestMulesController } from './controller/testMules.controller';
-import { MyLibraryModule } from '@app/config-lib';
+import { TestModulesService } from './testMules.service';
+import { TestMulesController } from './testMules.controller';
+import { MyLibraryModule } from "@lib/my-library/src";
 // import { ConfigModule } from '@nestjs/config';
 // import config from '../../../../../config';
 

@@ -1,5 +1,5 @@
 import { Controller, Get, Query, Req, Res } from '@nestjs/common';
-import { TestModulesService } from '../service/testMules.service';
+import { TestModulesService } from './testMules.service';
 
 @Controller('/v1/b')
 export class TestMulesController {
